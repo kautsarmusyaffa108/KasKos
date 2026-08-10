@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>KOSKAS</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- =========================
+       LOGIN / LOADING
+  ========================== -->
+
+  <div id="loadingScreen" class="screen">
+    <div class="loading-box">
+      <div class="loader"></div>
+      <h2>KOSKAS</h2>
+      <p>Memeriksa akun...</p>
+    </div>
+  </div>
+
+
+  <!-- =========================
+       APP
+  ========================== -->
+
+  <div id="app" class="app hidden">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+      <div class="brand">
+        <div class="brand-logo">K</div>
+
+        <div>
+          <h2>KOSKAS</h2>
+          <span>Manajemen Kos</span>
+        </div>
+      </div>
+
+
+      <nav class="menu">
+
+        <button
+          class="menu-item active"
+          data-page="dashboard"
+        >
+          <span>⌂</span>
+          Dashboard
+        </button>
+
+
+        <button
+          class="menu-item"
+          data-page="payments"
+        >
+          <span>💳</span>
+          Iuran
+        </button>
+
+
+        <button
+          class="menu-item"
+          data-page="expenses"
+        >
+          <span>💸</span>
+          Pengeluaran
+        </button>
+
+
+        <button
+          class="menu-item admin-only"
+          data-page="members"
+        >
+          <span>👥</span>
+          Penghuni
+        </button>
+
+
+        <button
+          class="menu-item admin-only"
+          data-page="activities"
+        >
+          <span>📋</span>
+          Aktivitas
+        </button>
+
+      </nav>
+
+
+      <div class="sidebar-bottom">
+
+        <div class="user-mini">
+
+          <div class="avatar" id="userAvatar">
+            ?
+          </div>
+
+          <div class="user-info">
+            <strong id="userName">
+              Loading...
+            </strong>
+
+            <span id="userRole">
+              -
+            </span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+      <!-- TOPBAR -->
+
+      <header class="topbar">
+
+        <div>
+          <h1 id="pageTitle">
+            Dashboard
+          </h1>
+
+          <p id="pageSubtitle">
+            Ringkasan keuangan kos
+          </p>
+        </div>
+
+
+        <div class="topbar-user">
+
+          <span id="topUserName">
+            -
+          </span>
+
+          <span
+            class="role-badge"
+            id="topUserRole"
+          >
+            -
+          </span>
+
+        </div>
+
+      </header>
+
+
+      <!-- CONTENT -->
+
+      <section class="content">
+
+
+        <!-- =========================
+             DASHBOARD
+        ========================== -->
+
+        <div
+          id="page-dashboard"
+          class="page"
+        >
+
+          <div class="summary-grid">
+
+            <div class="summary-card">
+
+              <span>Total Pemasukan</span>
+
+              <strong id="totalIncome">
+                Rp0
+              </strong>
+
+            </div>
+
+
+            <div class="summary-card">
+
+              <span>Total Pengeluaran</span>
+
+              <strong id="totalExpense">
+                Rp0
+              </strong>
+
+            </div>
+
+
+            <div class="summary-card">
+
+              <span>Saldo</span>
+
+              <strong id="balance">
+                Rp0
+              </strong>
+
+            </div>
+
+
+            <div class="summary-card">
+
+              <span>Iuran Bulan Ini</span>
+
+              <strong id="paymentProgress">
+                0 / 0
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div class="dashboard-grid">
+
+            <div class="card">
+
+              <div class="card-header">
+                <div>
+                  <h3>Status Iuran</h3>
+                  <p id="currentMonth">
+                    -
+                  </p>
+                </div>
+              </div>
+
+              <div
+                id="paymentStatusList"
+                class="payment-status-list"
+              ></div>
+
+            </div>
+
+
+            <div class="card">
+
+              <div class="card-header">
+
+                <div>
+                  <h3>Pengeluaran</h3>
+                  <p>Berdasarkan kategori</p>
+                </div>
+
+              </div>
+
+              <div
+                id="categoryList"
+                class="category-list"
+              ></div>
+
+            </div>
+
+          </div>
+
+
+          <div class="card">
+
+            <div class="card-header">
+
+              <div>
+                <h3>Aktivitas Terbaru</h3>
+                <p>Aktivitas terakhir di KOSKAS</p>
+              </div>
+
+            </div>
+
+            <div
+              id="recentActivities"
+              class="activity-list"
+            ></div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             PAYMENTS
+        ========================== -->
+
+        <div
+          id="page-payments"
+          class="page hidden"
+        >
+
+          <div class="page-actions">
+
+            <div>
+              <h2>Data Iuran</h2>
+              <p>Riwayat pembayaran penghuni</p>
+            </div>
+
+            <button
+              class="btn btn-primary"
+              id="btnAddPayment"
+            >
+              + Tambah Iuran
+            </button>
+
+          </div>
+
+
+          <div class="filter-bar">
+
+            <input
+              type="month"
+              id="paymentMonth"
+            >
+
+            <select id="paymentStatusFilter">
+
+              <option value="">
+                Semua Status
+              </option>
+
+              <option value="Lunas">
+                Lunas
+              </option>
+
+              <option value="Pending">
+                Pending
+              </option>
+
+              <option value="Rejected">
+                Rejected
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="card">
+
+            <div class="table-wrapper">
+
+              <table>
+
+                <thead>
+
+                  <tr>
+                    <th>Tanggal</th>
+                    <th>Penghuni</th>
+                    <th>Bulan</th>
+                    <th>Nominal</th>
+                    <th>Metode</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                  </tr>
+
+                </thead>
+
+                <tbody id="paymentTable">
+                </tbody>
+
+              </table>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             EXPENSES
+        ========================== -->
+
+        <div
+          id="page-expenses"
+          class="page hidden"
+        >
+
+          <div class="page-actions">
+
+            <div>
+              <h2>Pengeluaran</h2>
+              <p>Catatan pengeluaran kos</p>
+            </div>
+
+            <button
+              class="btn btn-primary"
+              id="btnAddExpense"
+            >
+              + Tambah Pengeluaran
+            </button>
+
+          </div>
+
+
+          <div class="filter-bar">
+
+            <input
+              type="month"
+              id="expenseMonth"
+            >
+
+            <select id="expenseCategoryFilter">
+
+              <option value="">
+                Semua Kategori
+              </option>
+
+              <option>
+                Galon & Gas
+              </option>
+
+              <option>
+                Kebersihan
+              </option>
+
+              <option>
+                Internet/Listrik
+              </option>
+
+              <option>
+                Lain-lain
+              </option>
+
+            </select>
+
+
+            <input
+              type="search"
+              id="expenseSearch"
+              placeholder="Cari pengeluaran..."
+            >
+
+          </div>
+
+
+          <div class="card">
+
+            <div class="table-wrapper">
+
+              <table>
+
+                <thead>
+
+                  <tr>
+                    <th>Tanggal</th>
+                    <th>Kategori</th>
+                    <th>Deskripsi</th>
+                    <th>Nominal</th>
+                    <th>Oleh</th>
+                    <th>Status</th>
+                  </tr>
+
+                </thead>
+
+                <tbody id="expenseTable">
+                </tbody>
+
+              </table>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             MEMBERS
+        ========================== -->
+
+        <div
+          id="page-members"
+          class="page hidden"
+        >
+
+          <div class="page-actions">
+
+            <div>
+              <h2>Penghuni</h2>
+              <p>Kelola akun dan role penghuni</p>
+            </div>
+
+          </div>
+
+
+          <div class="card">
+
+            <div class="table-wrapper">
+
+              <table>
+
+                <thead>
+
+                  <tr>
+                    <th>Nama</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Role</th>
+                    <th>Aksi</th>
+                  </tr>
+
+                </thead>
+
+                <tbody id="memberTable">
+                </tbody>
+
+              </table>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             ACTIVITIES
+        ========================== -->
+
+        <div
+          id="page-activities"
+          class="page hidden"
+        >
+
+          <div class="page-actions">
+
+            <div>
+              <h2>Activity Log</h2>
+              <p>Riwayat aktivitas sistem</p>
+            </div>
+
+          </div>
+
+
+          <div class="card">
+
+            <div
+              id="activityPageList"
+              class="activity-list"
+            ></div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+
+  <!-- =========================
+       MODAL PAYMENT
+  ========================== -->
+
+  <div
+    id="paymentModal"
+    class="modal hidden"
+  >
+
+    <div class="modal-box">
+
+      <div class="modal-header">
+
+        <h3>Tambah Iuran</h3>
+
+        <button
+          class="modal-close"
+          data-close="paymentModal"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <form id="paymentForm">
+
+        <div class="form-group member-select-group">
+
+          <label>Penghuni</label>
+
+          <select
+            id="paymentMember"
+            required
+          ></select>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Tanggal</label>
+
+          <input
+            type="date"
+            id="paymentDate"
+            required
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Nominal</label>
+
+          <input
+            type="number"
+            id="paymentNominal"
+            min="1"
+            required
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Metode</label>
+
+          <select
+            id="paymentMethod"
+            required
+          >
+
+            <option value="Cash">
+              Cash
+            </option>
+
+            <option value="Transfer">
+              Transfer
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Bukti Pembayaran</label>
+
+          <input
+            type="url"
+            id="paymentProof"
+            placeholder="Link bukti pembayaran"
+          >
+
+        </div>
+
+
+        <button
+          class="btn btn-primary btn-full"
+          type="submit"
+        >
+          Simpan Iuran
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       MODAL EXPENSE
+  ========================== -->
+
+  <div
+    id="expenseModal"
+    class="modal hidden"
+  >
+
+    <div class="modal-box">
+
+      <div class="modal-header">
+
+        <h3>Tambah Pengeluaran</h3>
+
+        <button
+          class="modal-close"
+          data-close="expenseModal"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <form id="expenseForm">
+
+        <div class="form-group">
+
+          <label>Kategori</label>
+
+          <select
+            id="expenseCategory"
+            required
+          >
+
+            <option>
+              Galon & Gas
+            </option>
+
+            <option>
+              Kebersihan
+            </option>
+
+            <option>
+              Internet/Listrik
+            </option>
+
+            <option>
+              Lain-lain
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Deskripsi</label>
+
+          <input
+            type="text"
+            id="expenseDescription"
+            required
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Nominal</label>
+
+          <input
+            type="number"
+            id="expenseNominal"
+            min="1"
+            required
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Link Nota</label>
+
+          <input
+            type="url"
+            id="expenseReceipt"
+            placeholder="Link nota jika ada"
+          >
+
+        </div>
+
+
+        <button
+          class="btn btn-primary btn-full"
+          type="submit"
+        >
+          Simpan Pengeluaran
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       TOAST
+  ========================== -->
+
+  <div
+    id="toast"
+    class="toast hidden"
+  ></div>
+
+
+  <script src="app.js"></script>
+
+</body>
+</html>
